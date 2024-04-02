@@ -84,10 +84,10 @@ bool onClientProcessChat(CRules@ this, const string& in textIn, string& out text
 		//	}
 		//}
 
-		if (add_to_chat && pb !is null)
+		if (add_to_chat)
 		{
 			client_AddToChat("[Citizen #"+player.getNetworkID()+"] "+textIn, SColor(255,0,0,0));
-			pb.Chat(textIn);
+			if (pb !is null) pb.Chat(textIn);
 		}
 		else
 		{
