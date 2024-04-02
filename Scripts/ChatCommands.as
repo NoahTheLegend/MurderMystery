@@ -66,23 +66,23 @@ bool onClientProcessChat(CRules@ this, const string& in textIn, string& out text
 
 	CBlob@ local = getLocalPlayerBlob();
 	CBlob@ pb = player.getBlob();
-	bool in_range = local !is null && pb !is null && !inProximity(local, pb);
+	bool in_range = local !is null && pb !is null) //&& !inProximity(local, pb);
 
 	if ((pb !is null && in_range) || local is null)
 	{
-		bool add_to_chat = false;
-		for (u8 i = 0; i < getPlayersCount(); i++)
-		{
-			CPlayer@ p = getPlayer(i);
-			if (p is null || p.getBlob() is null) continue;
-			CBlob@ b = p.getBlob();
-
-			if (local !is null && !inProximity(local, b))
-			{
-				add_to_chat = true;
-				break;
-			}
-		}
+		bool add_to_chat = true;
+		//for (u8 i = 0; i < getPlayersCount(); i++)
+		//{
+		//	CPlayer@ p = getPlayer(i);
+		//	if (p is null || p.getBlob() is null) continue;
+		//	CBlob@ b = p.getBlob();
+//
+		//	if (local !is null && !inProximity(local, b))
+		//	{
+		//		add_to_chat = true;
+		//		break;
+		//	}
+		//}
 
 		if (add_to_chat)
 		{
