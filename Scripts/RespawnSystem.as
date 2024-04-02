@@ -50,8 +50,8 @@ shared class RespawnSystem
                 newBlob.set_u8("role", role);
                 newBlob.Sync("role", true);
 
-                if (role == 1)
-		            newBlob.server_SetHealth(1.0f);
+                //if (role == 1)
+		        //    newBlob.server_SetHealth(1.0f);
 
                 if (rules.hasTag("waiting for restart")) LoadNextMap();
             }
