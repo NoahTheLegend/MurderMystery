@@ -66,7 +66,7 @@ bool onClientProcessChat(CRules@ this, const string& in textIn, string& out text
 
 	CBlob@ local = getLocalPlayerBlob();
 	CBlob@ pb = player.getBlob();
-	bool in_range = local !is null && pb !is null) //&& !inProximity(local, pb);
+	bool in_range = local !is null && pb !is null; //&& !inProximity(local, pb);
 
 	if ((pb !is null && in_range) || local is null)
 	{
