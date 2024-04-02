@@ -41,6 +41,12 @@ void onInit(CRules@ this)
 	onRestart(this);
 }
 
+void onRender(CRules@ this)
+{
+	Driver@ driver = getDriver();
+	if (!driver.ShaderState()) driver.ForceStartShaders();
+}
+
 bool need_sky_check = true;
 void onRestart(CRules@ this)
 {
@@ -61,10 +67,7 @@ void onRestart(CRules@ this)
 }
 
 void onTick(CRules@ this)
-{
-	Driver@ driver = getDriver();
-	driver.ForceStartShaders();
-	
+{	
 	//TODO: figure out a way to optimise so we don't need to keep running this hook
 	if (need_sky_check)
 	{

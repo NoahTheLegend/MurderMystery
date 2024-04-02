@@ -165,7 +165,6 @@ void onSetTile(int offset, uint16 tiletype)
     // uses hardcoded tile solid check! extend for custom tiles!!!
     // i cant think of any way to do it with tile flag, because tile isnt placed yet
     solids[offset] = getMap().isTileSolid(tiletype);
-
     tiles_to_update.push_back(offset);
 }
 

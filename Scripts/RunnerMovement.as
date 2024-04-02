@@ -412,7 +412,7 @@ void onTick(CMovement@ this)
 				         ((left && surface_right) || (right && surface_left)) &&
 				         !surface_below && !jumpedLEFT && !jumpedRIGHT)
 				{
-					f32 walljumpforce = 2.0f;
+					f32 walljumpforce = 4.0f;
 					vel.Set(surface_right ? -walljumpforce : walljumpforce, -2.0f);
 					blob.setVelocity(vel);
 
