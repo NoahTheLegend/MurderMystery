@@ -328,9 +328,12 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 	if (blob.hasTag("player"))
 	{
 		CPlayer@ p = this.getDamageOwnerPlayer();
-		if (p !is null && p.getBlob() !is blob)
+		if (p !is null)
 		{
-			return true;
+			if (p.getBlob() is blob)
+				return false;
+			else
+				return true;
 		}
 	}
 

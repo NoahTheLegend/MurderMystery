@@ -41,10 +41,16 @@ void onInit(CRules@ this)
 	onRestart(this);
 }
 
+bool no_more_shaders = false;
 void onRender(CRules@ this)
 {
+	if (!isClient()) return;
 	Driver@ driver = getDriver();
-	if (!driver.ShaderState()) driver.ForceStartShaders();
+	if (!driver.ShaderState() && !no_more_shaders)
+	{
+		driver.ForceStartShaders();
+		no_more_shaders = true;
+	}
 }
 
 bool need_sky_check = true;

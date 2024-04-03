@@ -122,7 +122,9 @@ void BalanceAll(CRules@ this, RulesCore@ core, BalanceInfo[]@ infos, int type = 
 	u8[] roles = {2,1};
 	for (u8 i = roles.size(); i < getPlayersCount(); i++)
 	{
-		roles.push_back(0);
+		if (i == 11) roles.push_back(2);
+		else if (i == 12) roles.push_back(1);
+		else roles.push_back(0);
 	}
 	u8[] roles_to_pick = shuffleArray(roles);
 
