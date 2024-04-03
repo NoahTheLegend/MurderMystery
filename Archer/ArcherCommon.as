@@ -194,7 +194,7 @@ void SetArrowType(CBlob@ this, const u8 type)
 	{
 		return;
 	}
-	archer.arrow_type = type;
+	archer.arrow_type = ArrowType::normal;
 }
 
 u8 getArrowType(CBlob@ this)
