@@ -12,5 +12,21 @@ bool LoadMap(CMap@ map, const string& in fileName)
 
 	MiniMap::Initialise();
 
-	return loader.loadMap(map, fileName);
+	bool load = loader.loadMap(map, fileName);
+
+	if (load)
+	{
+		MAP_LOAD_CALLBACK@ map_load_func;
+		getRules().get("MAP_LOAD_CALLBACK", @map_load_func);
+		if (map_load_func is null)
+		{
+			print("MAP_LOAD_CALLBACK function handle is null\n");
+		}
+		else
+		{
+			map_load_func(map.tilemapwidth, map.tilemapheight);
+		}
+	}
+
+	return load;
 }
