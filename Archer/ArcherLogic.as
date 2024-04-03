@@ -907,7 +907,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			return;
 		}
 
-		archer.arrow_type = arrowType;
+		archer.arrow_type = ArrowType::normal;
 
 		// return to normal arrow - server didnt have this synced
 		if (!hasArrows(this, arrowType))
@@ -1067,7 +1067,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		{
 			if (cmd == this.getCommandID("pick " + arrowTypeNames[i]))
 			{
-				archer.arrow_type = i;
+				archer.arrow_type = ArrowType::normal;
 				break;
 			}
 		}
@@ -1076,7 +1076,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 void CycleToArrowType(CBlob@ this, ArcherInfo@ archer, u8 arrowType)
 {
-	archer.arrow_type = arrowType;
+	archer.arrow_type = ArrowType::normal;
 	if (this.isMyPlayer())
 	{
 		Sound::Play("/CycleInventory.ogg");
@@ -1116,7 +1116,7 @@ void onAddToInventory(CBlob@ this, CBlob@ blob)
 		{
 			if (itemname == arrowTypeNames[i])
 			{
-				archer.arrow_type = i;
+				archer.arrow_type = ArrowType::normal;
 			}
 		}
 	}
