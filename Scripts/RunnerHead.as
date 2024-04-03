@@ -105,7 +105,7 @@ CSpriteLayer@ LoadHead(CSprite@ this, int headIndex)
 	CSpriteLayer@ head = this.addSpriteLayer("head", texture_file, 16, 16, team, skin);
 
 	// figure out head frame
-	s32 headFrame = Maths::Floor(XORRandom(1024)*0.25f)*4;
+	s32 headFrame = Maths::Floor(Maths::Pow(blob.getNetworkID()%32,3)*0.25f)*4;
     headFrame = headFrame % (pack.count*8);
 
 	if (head !is null)

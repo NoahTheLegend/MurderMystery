@@ -118,6 +118,7 @@ float drawScoreboard(CPlayer@ localplayer, CPlayer@[] players, Vec2f topleft, CT
 
 	//draw player table header
 	GUI::DrawText(getTranslatedString("Player"), Vec2f(topleft.x, topleft.y), SColor(0xffffffff));
+	GUI::DrawText(getTranslatedString("Role"), Vec2f(topleft.x + 300, topleft.y), SColor(0xffffffff));
 	GUI::DrawText(getTranslatedString("Username"), Vec2f(bottomright.x - 470, topleft.y), SColor(0xffffffff));
 	GUI::DrawText(getTranslatedString("Ping"), Vec2f(bottomright.x - 330, topleft.y), SColor(0xffffffff));
 	GUI::DrawText(getTranslatedString("Kills"), Vec2f(bottomright.x - 260, topleft.y), SColor(0xffffffff));
@@ -248,22 +249,25 @@ float drawScoreboard(CPlayer@ localplayer, CPlayer@[] players, Vec2f topleft, CT
 
 		// head icon
 
-		/*string headTexture = "playercardicons.png";
-		int headIndex = 3;
-		int teamIndex = p.getTeamNum();
-		Vec2f headOffset = Vec2f(30, 0);
-		float headScale = 0.5f;
-
-		if (b !is null)
+		if (getLocalPlayerBlob() is null)
 		{
-			headIndex = b.get_s32("head index");
-			headTexture = b.get_string("head texture");
-			teamIndex = b.get_s32("head team");
-			headOffset += Vec2f(-8, -12);
-			headScale = 1.0f;
-		}
+			string headTexture = "playercardicons.png";
+			int headIndex = 3;
+			int teamIndex = p.getTeamNum();
+			Vec2f headOffset = Vec2f(30, 0);
+			float headScale = 0.5f;
 
-		GUI::DrawIcon(headTexture, headIndex, Vec2f(16, 16), topleft + headOffset, headScale, teamIndex);*/
+			if (b !is null)
+			{
+				headIndex = b.get_s32("head index");
+				headTexture = b.get_string("head texture");
+				teamIndex = b.get_s32("head team");
+				headOffset += Vec2f(-8, -12);
+				headScale = 1.0f;
+			}
+
+			GUI::DrawIcon(headTexture, headIndex, Vec2f(16, 16), topleft + headOffset, headScale, teamIndex);
+		}
 
 		//have to calc this from ticks
 		s32 ping_in_ms = s32(p.getPing() * 1000.0f / 30.0f);
@@ -287,6 +291,25 @@ float drawScoreboard(CPlayer@ localplayer, CPlayer@[] players, Vec2f topleft, CT
 		{
 			//draw name alone
 			GUI::DrawText(playername, topleft + Vec2f(name_buffer, 0), namecolour);
+		}
+
+		if (getLocalPlayerBlob() is null)
+		{
+			const string[] roles = {
+				"INNOCENT",
+				"SHERIFF",
+				"MURDERER"
+			};
+
+			const SColor[] roles_color = {
+				SColor(255,255,255,255),
+				SColor(255,80,235,50),
+				SColor(255,225,25,25),
+			};
+
+			bool dead = p.getBlob() is null;
+			string role = dead ? "DEAD" : roles[p.getBlob().get_u8("role")];
+			GUI::DrawText(role, topleft + Vec2f(300, 0), dead ? color_white : roles_color[p.getBlob().get_u8("role")]);
 		}
 
 		//draw account age indicator
