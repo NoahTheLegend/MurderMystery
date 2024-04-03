@@ -49,7 +49,6 @@ void onRender(CRules@ this)
 	if (!driver.ShaderState() && !no_more_shaders)
 	{
 		driver.ForceStartShaders();
-		no_more_shaders = true;
 	}
 }
 
