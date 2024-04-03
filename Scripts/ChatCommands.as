@@ -89,7 +89,7 @@ bool onClientProcessChat(CRules@ this, const string& in textIn, string& out text
 			if (pb !is null)
 			{
 				client_AddToChat("[Citizen #"+pb.getNetworkID()+"] "+textIn, SColor(255,0,0,0));
-				pb.Chat(textIn);
+				if (!inProximity(local, pb)) pb.Chat(textIn);
 			}
 			else
 				return true;

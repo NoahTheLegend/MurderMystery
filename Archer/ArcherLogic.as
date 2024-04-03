@@ -9,6 +9,7 @@
 #include "Help.as";
 #include "BombCommon.as";
 #include "RedBarrierCommon.as"
+#include "RayCasts.as"
 
 const int FLETCH_COOLDOWN = 45;
 const int PICKUP_COOLDOWN = 15;
@@ -517,7 +518,10 @@ void ManageBow(CBlob@ this, ArcherInfo@ archer, RunnerMoveVars@ moveVars)
 					if (stabTarget !is null && (stabTarget.getPosition() - this.getPosition()).Length() <= stab_length)
 					{
 						this.server_Hit(stabTarget, stabTarget.getPosition(), Vec2f_zero, 1.0f, Hitters::stab, true);
-						if (isClient()) this.getSprite().PlaySound("KnifeStab.ogg", 0.5f, 1.0f);
+						if (isClient() && !inProximity(getLocalPlayerBlob(), this))
+						{
+							this.getSprite().PlaySound("KnifeStab.ogg", 0.5f, 1.0f);
+						}
 					}
 				}
 				else if(archer.stab_delay >= STAB_TIME)

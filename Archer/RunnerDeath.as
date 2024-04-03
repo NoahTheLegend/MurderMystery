@@ -1,5 +1,6 @@
 #include "Hitters.as"
 #include "GenericButtonCommon.as"
+#include "RayCasts.as"
 
 const u32 VANISH_BODY_SECS = 900;
 const f32 CARRIED_BLOB_VEL_SCALE = 1.0;
@@ -62,7 +63,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 						this.getSprite().PlaySound("Gurgle");
 					}
 				}
-				else
+				else if (!inProximity(getLocalPlayerBlob(), this))
 				{
 					if (this.getHealth() > gibHealth / 2.0f)
 					{
