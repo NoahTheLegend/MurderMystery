@@ -36,6 +36,9 @@ shared class RespawnSystem
 			player.server_setTeamNum(p_info.team);
             CRules@ rules = getRules();
 
+			CBlob@ lantern = server_CreateBlob("lantern", newBlob.getTeamNum(), newBlob.getPosition());
+			newBlob.server_PutInInventory(lantern);
+
             u8 count = 0;
 		    for (u8 i = 0; i < getPlayersCount(); i++)
 		    {
