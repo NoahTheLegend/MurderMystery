@@ -13,7 +13,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		return damage;
 	}
 
-    if (inProximity(getLocalPlayerBlob(), this)) return damage;
+    if (!inProximity(getLocalPlayerBlob(), this)) return damage;
 
 	if (damage > 1.45f) //sound for anything 2 heart+
 	{

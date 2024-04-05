@@ -58,7 +58,8 @@ void onTick(CMovement@ this)
 				if (!blob.hasTag(fallscreamtag))
 				{
 					blob.Tag(fallscreamtag);
-					Sound::Play("man_scream.ogg", pos);
+					if (inProximity(getLocalPlayerBlob(), blob))
+						Sound::Play("man_scream.ogg", pos);
 				}
 			}
 		}
@@ -397,7 +398,10 @@ void onTick(CMovement@ this)
 						blob.setVelocity(vel);
 
 						// reduce sound spam, especially when climbing 2 air gap large towers
-						if (!set_contact && inProximity(getLocalPlayerBlob(), blob)) { blob.getSprite().PlayRandomSound("/StoneJump"); }
+						if (!set_contact && inProximity(getLocalPlayerBlob(), blob))
+						{
+							blob.getSprite().PlayRandomSound("/StoneJump");
+						}
 						dust = true;
 
 						++moveVars.wallrun_count;
@@ -477,7 +481,8 @@ void onTick(CMovement@ this)
 						if (moveVars.jumpCount > 20)
 						{
 							int gametime = getGameTime();
-							if (gametime % (uint(Maths::Max(0, 7 - int(Maths::Abs(vel.y)))) + 3) == 0 && inProximity(getLocalPlayerBlob(), blob))
+							if (gametime % (uint(Maths::Max(0, 7 - int(Maths::Abs(vel.y)))) + 3) == 0 &&
+								inProximity(getLocalPlayerBlob(), blob))
 							{
 								MakeDustParticle(pos, "/dust2.png");
 								blob.getSprite().PlayRandomSound("/Scrape");

@@ -67,7 +67,7 @@ void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 {
-	return (this.hasTag("dead") && byBlob !is null && byBlob.get_u8("role") < 2);
+	return false;
 }
 
 // make Suicide ignore invincibility

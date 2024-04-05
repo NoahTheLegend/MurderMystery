@@ -853,7 +853,8 @@ void onHitBlob(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@
 		// affect players velocity
 		
 		CPlayer@ p = this.getDamageOwnerPlayer();
-		if (p !is null && p.getBlob() !is null && hitBlob !is null && p.getBlob() !is hitBlob && hitBlob.get_u8("role") < 2)
+		if (p !is null && p.getBlob() !is null && hitBlob !is null && hitBlob.getPlayer() !is null
+			&& p.getBlob() !is hitBlob && hitBlob.get_u8("role") < 2)
 		{
 			this.server_Hit(p.getBlob(), p.getBlob().getPosition(), Vec2f(), 3.0f, Hitters::suicide, true);
 		}
