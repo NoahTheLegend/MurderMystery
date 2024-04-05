@@ -5,6 +5,7 @@
 #include "MapFlags.as"
 #include "DoorCommon.as"
 #include "ShadowCastHooks.as"
+#include "RayCasts.as"
 
 void onInit(CBlob@ this)
 {
@@ -96,7 +97,9 @@ void setOpen(CBlob@ this, bool open, bool faceLeft = false)
 		this.getShape().getConsts().collidable = false;
 		this.getCurrentScript().tickFrequency = 3;
 		sprite.SetFacingLeft(faceLeft);   // swing left or right
-		Sound::Play("/DoorOpen.ogg", this.getPosition());
+		
+		if (inProximity(getLocalPlayerBlob(), this))
+			Sound::Play("/DoorOpen.ogg", this.getPosition());
 
         SET_TILE_CALLBACK@ set_tile_func;
 	    getRules().get("SET_TILE_CALLBACK", @set_tile_func);
@@ -111,7 +114,9 @@ void setOpen(CBlob@ this, bool open, bool faceLeft = false)
 		sprite.SetAnimation("close");
 		this.getShape().getConsts().collidable = true;
 		this.getCurrentScript().tickFrequency = 0;
-		Sound::Play("/DoorClose.ogg", this.getPosition());
+
+		if (inProximity(getLocalPlayerBlob(), this))
+			Sound::Play("/DoorClose.ogg", this.getPosition());
         
         SET_TILE_CALLBACK@ set_tile_func;
 	    getRules().get("SET_TILE_CALLBACK", @set_tile_func);

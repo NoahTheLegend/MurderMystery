@@ -100,45 +100,83 @@ s32 getAverageBalance(BalanceInfo[]@ infos)
 	return 1;
 }
 
-u8[] shuffleArray(u8[] arr) {
-    uint length = arr.length();
-    for (uint i = length - 1; i > 0; i--) {
-        uint j = XORRandom(i + 1);
-        uint temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
+array<u16> sortPlayersByWeight(array<u16> players)
+{
+    array<u16> sortedPlayers = players;
+
+    for (uint i = 0; i < sortedPlayers.length(); i++)
+    {
+        CPlayer@ p1 = getPlayerByNetworkId(sortedPlayers[i]);
+        if (p1 is null) continue;
+
+        for (uint j = i + 1; j < sortedPlayers.length(); j++)
+        {
+            CPlayer@ p2 = getPlayerByNetworkId(sortedPlayers[j]);
+            if (p2 is null) continue;
+
+            u32 weight1 = p1.get_u32("weight");
+            u32 weight2 = p2.get_u32("weight");
+
+            if (weight1 < weight2 || (weight1 == weight2 && XORRandom(100) > 50))
+            {
+                u16 temp = sortedPlayers[i];
+                sortedPlayers[i] = sortedPlayers[j];
+                sortedPlayers[j] = temp;
+                @p1 = p2;
+            }
+        }
     }
 
-	return arr;
+    return sortedPlayers;
 }
-
-// force balance all teams
 
 void BalanceAll(CRules@ this, RulesCore@ core, BalanceInfo[]@ infos, int type = SCRAMBLE)
 {
-	int numTeams = this.getTeamsCount();
-	int team = 1;
+    u32 count = 0;
+    array<u16> players;
 
-	u8[] roles = {2,1};
-	for (u8 i = roles.size(); i < getPlayersCount(); i++)
-	{
-		if (i == 11) roles.push_back(2);
-		else if (i == 12) roles.push_back(1);
-		else roles.push_back(0);
-	}
-	u8[] roles_to_pick = shuffleArray(roles);
+    for (uint i = 0; i < getPlayersCount(); i++)
+    {
+        CPlayer@ p = getPlayer(i);
+        if (p is null || p.getTeamNum() == this.getSpectatorTeamNum()) continue;
 
-	for (u32 i = 0; i < getPlayersCount(); i++)
-	{
-		CPlayer@ p = getPlayer(i);
-		if (p is null) continue;
+        players.insertLast(p.getNetworkID());
+        count++;
+    }
 
-		if (p.getTeamNum() != this.getSpectatorTeamNum())
-		{
-			core.ChangePlayerTeam(p, 1);
-			p.set_u8("role", roles_to_pick[i]);
-		}
-	}
+    array<u32> roles = {2, 1};
+    if (count > 10)
+    {
+        roles.insertAt(0, 2);
+        roles.insertLast(1);
+    }
+
+    for (uint i = roles.size(); i < count; i++)
+    {
+        roles.insertLast(0);
+    }
+
+    players = sortPlayersByWeight(players);
+    u32 sum = 0;
+	u8 sheriff_cost = 1; 
+
+    for (uint i = 0; i < players.size(); i++)
+    {
+        CPlayer@ p = getPlayerByNetworkId(players[i]);
+        if (p is null) continue;
+
+        core.ChangePlayerTeam(p, 1);
+		f32 ratio = 1;
+
+        u32 w = Maths::Max(1, p.get_u32("weight"));
+        u32 role = roles[i];
+		u8 rnd = XORRandom(100);
+
+		p.set_u8("role", role);
+		p.set_u32("weight", role == 0 ? w + ratio : role == 1 ? w / sheriff_cost : 0);
+
+        printf(p.getUsername() + " r:" + p.get_u8("role") + " w:" + p.get_u32("weight"));
+    }
 }
 
 ///////////////////////////////////////////////////
@@ -235,7 +273,7 @@ void onTick(CRules@ this)
 
 }
 
-void onPlayerRequestTeamChange(CRules@ this, CPlayer@ player, u8 newTeam)
+void onPlayerRequestTeamChange(CRules@ this, CPlayer@ player, u32 newTeam)
 {
 	RulesCore@ core;
 	this.get("core", @core);

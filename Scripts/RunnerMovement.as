@@ -5,6 +5,7 @@
 #include "FallDamageCommon.as";
 #include "KnockedCommon.as";
 #include "ArcherCommon.as";
+#include "RayCasts.as";
 
 void onInit(CMovement@ this)
 {
@@ -396,7 +397,7 @@ void onTick(CMovement@ this)
 						blob.setVelocity(vel);
 
 						// reduce sound spam, especially when climbing 2 air gap large towers
-						if (!set_contact) { blob.getSprite().PlayRandomSound("/StoneJump"); }
+						if (!set_contact && inProximity(getLocalPlayerBlob(), blob)) { blob.getSprite().PlayRandomSound("/StoneJump"); }
 						dust = true;
 
 						++moveVars.wallrun_count;
@@ -467,7 +468,7 @@ void onTick(CMovement@ this)
 
 					if (is_client) // effect
 					{
-						if (!moveVars.wallsliding)
+						if (!moveVars.wallsliding && inProximity(getLocalPlayerBlob(), blob))
 						{
 							blob.getSprite().PlayRandomSound("/Scrape");
 						}
@@ -476,7 +477,7 @@ void onTick(CMovement@ this)
 						if (moveVars.jumpCount > 20)
 						{
 							int gametime = getGameTime();
-							if (gametime % (uint(Maths::Max(0, 7 - int(Maths::Abs(vel.y)))) + 3) == 0)
+							if (gametime % (uint(Maths::Max(0, 7 - int(Maths::Abs(vel.y)))) + 3) == 0 && inProximity(getLocalPlayerBlob(), blob))
 							{
 								MakeDustParticle(pos, "/dust2.png");
 								blob.getSprite().PlayRandomSound("/Scrape");
@@ -608,7 +609,7 @@ void onTick(CMovement@ this)
 
 			// sound
 
-			if (moveVars.jumpCount == 1 && is_client)
+			if (moveVars.jumpCount == 1 && is_client && inProximity(getLocalPlayerBlob(), blob))
 			{
 				TileType tile = blob.getMap().getTile(blob.getPosition() + Vec2f(0.0f, blob.getRadius() + 4.0f)).type;
 

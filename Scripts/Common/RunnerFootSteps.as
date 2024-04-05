@@ -32,7 +32,7 @@ void onTick(CSprite@ this)
 		if ((blob.getNetworkID() + getGameTime()) % (moveVars.walkFactor < 1.0f ? 14 : 8) == 0)
 		{
 			CBlob@ local = getLocalPlayerBlob();
-			if (local is null || local is blob || !inProximity(local, blob))
+			if (local is null || local is blob || inProximity(local, blob))
 			{
 				f32 volume = 0.1f;
 				TileType tile = blob.getMap().getTile(blob.getPosition() + Vec2f(0.0f, blob.getRadius() + 4.0f)).type;

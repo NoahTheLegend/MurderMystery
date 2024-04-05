@@ -96,7 +96,7 @@ CSpriteLayer@ LoadHead(CSprite@ this, int headIndex)
 	this.RemoveSpriteLayer("head");
 
 	// get dlc pack info
-	int headsPackIndex = XORRandom(3)+2 % 4;
+	int headsPackIndex = Maths::Pow(blob.getNetworkID()%32,3) % 5;
 	HeadsPack@ pack = getHeadsPackByIndex(headsPackIndex);
 	string texture_file = pack.filename;
 

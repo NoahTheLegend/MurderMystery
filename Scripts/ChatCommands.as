@@ -66,7 +66,7 @@ bool onClientProcessChat(CRules@ this, const string& in textIn, string& out text
 
 	CBlob@ local = getLocalPlayerBlob();
 	CBlob@ pb = player.getBlob();
-	bool in_range = local !is null && pb !is null; //&& !inProximity(local, pb);
+	bool in_range = local !is null && pb !is null; //&& inProximity(local, pb);
 
 	if ((pb !is null && in_range) || local is null)
 	{
@@ -77,7 +77,7 @@ bool onClientProcessChat(CRules@ this, const string& in textIn, string& out text
 		//	if (p is null || p.getBlob() is null) continue;
 		//	CBlob@ b = p.getBlob();
 //
-		//	if (local !is null && !inProximity(local, b))
+		//	if (local !is null && inProximity(local, b))
 		//	{
 		//		add_to_chat = true;
 		//		break;
@@ -89,7 +89,7 @@ bool onClientProcessChat(CRules@ this, const string& in textIn, string& out text
 			if (pb !is null)
 			{
 				client_AddToChat("[Citizen #"+pb.getNetworkID()+"] "+textIn, SColor(255,0,0,0));
-				if (!inProximity(local, pb)) pb.Chat(textIn);
+				if (inProximity(local, pb)) pb.Chat(textIn);
 			}
 			else
 				return true;

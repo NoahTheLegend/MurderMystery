@@ -88,7 +88,7 @@ void onTick(CBlob@ blob)
 			}
 
             CBlob@ local = getLocalPlayerBlob();
-            if ((!blob.isMyPlayer() && local is null) || (local !is null && inProximity(local, blob)))
+            if (!(local is null || inProximity(local, blob)))
                 visible = false;
 
 			layer.SetVisible(visible);

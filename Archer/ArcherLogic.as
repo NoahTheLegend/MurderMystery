@@ -518,7 +518,7 @@ void ManageBow(CBlob@ this, ArcherInfo@ archer, RunnerMoveVars@ moveVars)
 					if (stabTarget !is null && (stabTarget.getPosition() - this.getPosition()).Length() <= stab_length)
 					{
 						this.server_Hit(stabTarget, stabTarget.getPosition(), Vec2f_zero, 1.0f, Hitters::stab, true);
-						if (isClient() && !inProximity(getLocalPlayerBlob(), this))
+						if (isClient() && inProximity(getLocalPlayerBlob(), this))
 						{
 							this.getSprite().PlaySound("KnifeStab.ogg", 0.5f, 1.0f);
 						}

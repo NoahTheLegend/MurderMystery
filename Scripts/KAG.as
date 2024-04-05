@@ -30,9 +30,6 @@ void onInit(CRules@ this)
 	PrecacheTextures();
 
 	//smooth shader
-	Driver@ driver = getDriver();
-	driver.AddShader("../Mods/mm-cont/Shaders/hq2x", 1.0f);
-	driver.SetShader("../Mods/mm-cont/Shaders/hq2x", true);
 
 	//reset var if you came from another gamemode that edits it
 	SetGridMenusSize(24,2.0f,32);
@@ -41,14 +38,41 @@ void onInit(CRules@ this)
 	onRestart(this);
 }
 
-bool no_more_shaders = false;
+bool enabled_shaders = false;
 void onRender(CRules@ this)
 {
 	if (!isClient()) return;
-	Driver@ driver = getDriver();
-	if (!driver.ShaderState() && !no_more_shaders)
+
+	if (!enabled_shaders && getLocalPlayer() !is null)
 	{
-		driver.ForceStartShaders();
+		Driver@ driver = getDriver();
+		
+		string path = (isServer() && isClient() ? "" : "The")+"MurderMystery";
+		if (getLocalPlayer().getUsername() == "GoldenGuy")
+		{
+			driver.AddShader("../Mods/"+path+"/Shaders/hq2x-contrast", 1.0f);
+			driver.SetShader("../Mods/"+path+"/Shaders/hq2x-contrast", true);
+
+			enabled_shaders = true;
+		}
+		else
+		{
+			driver.AddShader("../Mods/"+path+"/Shaders/hq2x", 1.0f);
+			driver.SetShader("../Mods/"+path+"/Shaders/hq2x", true);
+
+			enabled_shaders = true;
+		}
+
+		return;
+	}
+	
+	if (enabled_shaders)
+	{
+		Driver@ driver = getDriver();
+		if (!driver.ShaderState())
+		{
+			driver.ForceStartShaders();
+		}
 	}
 }
 

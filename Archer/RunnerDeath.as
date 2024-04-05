@@ -63,7 +63,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 						this.getSprite().PlaySound("Gurgle");
 					}
 				}
-				else if (!inProximity(getLocalPlayerBlob(), this))
+				else if (inProximity(getLocalPlayerBlob(), this))
 				{
 					if (this.getHealth() > gibHealth / 2.0f)
 					{
