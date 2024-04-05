@@ -1,6 +1,7 @@
 // PressurePlate.as
 
 #include "MechanismsCommon.as";
+#include "ShadowCastHooks.as"
 #include "RayCasts.as";
 
 class Plate : Component
@@ -39,6 +40,13 @@ void onSetStatic(CBlob@ this, const bool isStatic)
 	this.set_u8("state", 0);
 	this.set_u32("cooldown", getGameTime() + 40);
 	this.set_u16("angle", this.getAngleDegrees());
+
+	SET_TILE_CALLBACK@ set_tile_func;
+	getRules().get("SET_TILE_CALLBACK", @set_tile_func);
+	if (set_tile_func !is null)
+	{
+		set_tile_func(getMap().getTileOffset(this.getPosition()), CMap::tile_castle);
+	}
 
 	if (getNet().isServer())
 	{

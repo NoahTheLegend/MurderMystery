@@ -3,6 +3,7 @@
 #include "MechanismsCommon.as";
 #include "DummyCommon.as";
 #include "Hitters.as";
+#include "ShadowCastHooks.as"
 #include "RayCasts.as";
 
 const u8 BURNOUT_COUNTER_MAX = 32;
@@ -22,6 +23,9 @@ class Obstructor : Component
 
 	void Activate(CBlob@ this)
 	{
+		CMap@ map = getMap();
+		if (map is null) return;
+
 		if (inProximity(getLocalPlayerBlob(), this))
 		{
 			this.getSprite().PlaySound("door_close.ogg");
@@ -120,6 +124,22 @@ void onTick(CBlob@ this)
 		{
 			sprite.PlaySound("door_close.ogg");
 		}
+	}
+}
+
+void onRender(CSprite@ this)
+{
+	CBlob@ blob = this.getBlob();
+	if (blob is null) return;
+	
+	CMap@ map = getMap();
+	if (map is null) return;
+
+	SET_TILE_CALLBACK@ set_tile_func;
+	getRules().get("SET_TILE_CALLBACK", @set_tile_func);
+	if (set_tile_func !is null)
+	{
+		set_tile_func(map.getTileOffset(blob.getPosition()), map.getTile(blob.getPosition()).type == Dummy::OBSTRUCTOR ? CMap::tile_castle : CMap::tile_castle_back);
 	}
 }
 

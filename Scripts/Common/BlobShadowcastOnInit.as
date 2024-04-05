@@ -12,5 +12,5 @@ void onTick(CBlob@ this)
 		set_tile_func(map.getTileOffset(this.getPosition()), CMap::tile_castle);
 	}
 
-    if (getGameTime() > 15) this.getCurrentScript().runFlags |= Script::remove_after_this;
+    if (getGameTime() > 30) this.getCurrentScript().runFlags |= Script::remove_after_this;
 }
