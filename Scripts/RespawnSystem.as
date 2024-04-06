@@ -8,7 +8,7 @@
 
 #include "PlayerInfo"
 
-const u8 min_ply = 3;
+const u8 min_ply = 4;
 
 shared class RespawnSystem
 {
