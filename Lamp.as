@@ -31,7 +31,9 @@ void onTick(CBlob@ this)
 {
     if (!isClient()) return;
     if (getMap() is null) return;
+	#ifndef STAGING
     getMap().UpdateLightingAtPosition(this.getPosition(), 128.0f);
+	#endif
 }
 
 void onInit(CBlob@ this)
