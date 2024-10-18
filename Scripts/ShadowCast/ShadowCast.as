@@ -5,6 +5,11 @@ void onInit(CRules@ this)
 {
     if(isClient())
 	{
+        if (getMap() is null)
+        {
+            this.Tag("require_shadowcast_init");
+            return;
+        }
 		this.set_s32("render_id", -1);
         Texture::createFromFile("shadow_tex", "pixel.png");
         //Texture::createFromFile("overlay", "cosmos.png");
@@ -170,6 +175,22 @@ void onSetTile(int offset, uint16 tiletype)
 
 void onTick(CRules@ this)
 {
+    if (this.hasTag("require_shadowcast_init"))
+    {
+        if(isClient())
+	    {
+            if (getMap() is null)
+            {
+                this.Tag("require_shadowcast_init");
+                return;
+            }
+
+	    	this.set_s32("render_id", -1);
+            Texture::createFromFile("shadow_tex", "pixel.png");
+            onReload(this);
+            this.Untag("require_shadowcast_init");
+        }
+    }
     if(full_update_needed)
     {
         CMap@ map = getMap();
