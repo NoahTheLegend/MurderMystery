@@ -69,7 +69,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		CBlob@ pickedup = getBlobByNetworkID(pickedup_id);
 		if (pickedup is null) return;
 
-		if (!pickedup.canBePickedUp(caller)) return;
+		if (!pickedup.canBePickedUp(caller) || pickedup.getName() == "archer") return;
 
 		if (pickedup.isAttached()) return;
 
