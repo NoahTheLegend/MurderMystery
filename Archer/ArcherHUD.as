@@ -42,17 +42,50 @@ void onRender(CSprite@ this)
 	SColor col = roles_color[role_num];
 	
 	CBlob@ local = getLocalPlayerBlob();
-	if (local !is null && local !is blob && getGameTime() > intro_time+30)
+	if (local !is null && getGameTime() > intro_time+30)
 	{
-		if (local.get_u8("role") == 2 && role_num == 2)
+		u8 local_role_num = local.get_u8("role");
+		f32 dist = getDriver().getScreenHeight()/2 * 0.9f;
+
+		if (local_role_num == 2)
 		{
-			Vec2f pos2d = getDriver().getScreenPosFromWorldPos(Vec2f_lerp(blob.getOldPosition(), blob.getPosition(), getInterpolationFactor())) - Vec2f(0,48);
-			f32 len = (local.getAimPos() - blob.getPosition()).Length();
-			if (len < max_len)
+			for (u8 i = 0; i < getPlayersCount(); i++)
 			{
-				GUI::SetFont("menu");
-				f32 team_alpha = 255 * (1.0f - len/max_len);
-				GUI::DrawTextCentered("TEAMMATE", pos2d, SColor(team_alpha,225,25,25));
+				CPlayer@ p = getPlayer(i);
+				if (p is null) continue;
+				
+				CBlob@ pb = p.getBlob();
+				if (pb is null || pb is local) continue;
+				
+				Vec2f pb_pos = pb.getPosition();
+				Vec2f pb_pos2d = getDriver().getScreenPosFromWorldPos(pb_pos);
+
+				Vec2f vec = pb_pos - local.getPosition();
+				vec.Normalize();
+				
+				Vec2f dim = Vec2f(8,8);
+				Vec2f sq_pos = getDriver().getScreenCenterPos() + vec * Maths::Min((pb_pos-local.getPosition()).Length(), dist);
+
+				Vec2f sq_tl = sq_pos - dim/2;
+				Vec2f sq_br = sq_tl + dim;
+
+				f32 factor = (pb.getDistanceTo(local) / (dist * 16));
+				u8 alpha = Maths::Min(100, (100 * factor*2));
+				if (alpha < 10) alpha = 0;
+
+				GUI::DrawRectangle(sq_tl, sq_br, pb.get_u8("role") != 2 ? SColor(alpha,255,25,55) : SColor(alpha,25,255,25));
+			}
+
+			if (role_num == 2 && local !is blob)
+			{
+				Vec2f pos2d = getDriver().getScreenPosFromWorldPos(Vec2f_lerp(blob.getOldPosition(), blob.getPosition(), getInterpolationFactor())) - Vec2f(0,48);
+				f32 len = (local.getAimPos() - blob.getPosition()).Length();
+				if (len < max_len)
+				{
+					GUI::SetFont("menu");
+					f32 team_alpha = 255 * (1.0f - len/max_len);
+					GUI::DrawTextCentered("TEAMMATE", pos2d, SColor(team_alpha,225,25,25));
+				}
 			}
 		}
 	}
@@ -68,8 +101,13 @@ void onRender(CSprite@ this)
 
 	GUI::SetFont("title");
 	alpha = Maths::Lerp(alpha, getScreenFlashAlpha(), 0.5f);
-	if (getGameTime() < intro_time)
-		SetScreenFlash(255,0,0,0, 1.0f);
+
+	if (getGameTime() < intro_time && blob.isMyPlayer() && !blob.hasTag("intro_launched"))
+	{
+		SetScreenFlash(255,0,0,0,intro_time/30.0f + 1);
+		blob.Tag("intro_launched");
+	}
+
 	if (getGameTime() < intro_time+30)
 	{
 		Vec2f prefix_dim;
