@@ -32,7 +32,7 @@ void Config(TDMCore@ this)
 	this.sudden_death = this.kills_to_win_per_player <= 0;
 
 	//how long for the game to play out?
-	f32 gameDurationMinutes = 1.5f + getPlayersCount() * 0.33f;
+	f32 gameDurationMinutes = 1.0f + getPlayersCount() * 0.25f;
 	this.gameDuration = (getTicksASecond() * 60 * gameDurationMinutes) + this.warmUpTime;
 
 	//spawn after death time - set in gamemode.cfg, or override here

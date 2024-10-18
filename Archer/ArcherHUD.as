@@ -62,16 +62,17 @@ void onRender(CSprite@ this)
 
 				Vec2f vec = pb_pos - local.getPosition();
 				vec.Normalize();
+				vec *= getCamera().targetDistance;
 				
-				Vec2f dim = Vec2f(8,8);
-				Vec2f sq_pos = getDriver().getScreenCenterPos() + vec * Maths::Min((pb_pos-local.getPosition()).Length(), dist);
+				Vec2f dim = Vec2f(8,8) * getCamera().targetDistance;;
+				Vec2f sq_pos = getDriver().getScreenPosFromWorldPos(local.getPosition()) + vec * Maths::Min((pb_pos-local.getPosition()).Length(), dist);
 
 				Vec2f sq_tl = sq_pos - dim/2;
 				Vec2f sq_br = sq_tl + dim;
 
-				f32 factor = (pb.getDistanceTo(local) / (dist * 16));
-				u8 alpha = Maths::Min(100, (100 * factor*2));
-				if (alpha < 10) alpha = 0;
+				f32 factor = pb.getDistanceTo(local) / 256.0f;
+				u8 alpha = Maths::Min(100, (100 * factor * 0.1f));
+				if (alpha <= 10) alpha = 0;
 
 				GUI::DrawRectangle(sq_tl, sq_br, pb.get_u8("role") != 2 ? SColor(alpha,255,25,55) : SColor(alpha,25,255,25));
 			}
@@ -84,7 +85,7 @@ void onRender(CSprite@ this)
 				{
 					GUI::SetFont("menu");
 					f32 team_alpha = 255 * (1.0f - len/max_len);
-					GUI::DrawTextCentered("TEAMMATE", pos2d, SColor(team_alpha,225,25,25));
+					GUI::DrawTextCentered("MURDERER", pos2d, SColor(team_alpha,225,25,25));
 				}
 			}
 		}
