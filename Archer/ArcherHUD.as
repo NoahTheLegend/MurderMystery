@@ -8,7 +8,6 @@ const int slotsSize = 6;
 
 void onInit(CSprite@ this)
 {
-	this.getCurrentScript().removeIfTag = "dead";
 	this.getBlob().set_u8("gui_HUD_slots_width", slotsSize);
 }
 
@@ -34,6 +33,7 @@ const f32 max_len = 48.0f;
 
 void onRender(CSprite@ this)
 {
+	GUI::SetFont("menu");
 	CBlob@ blob = this.getBlob();
 
 	u8 role_num = blob.get_u8("role");
@@ -42,6 +42,13 @@ void onRender(CSprite@ this)
 	SColor col = roles_color[role_num];
 	
 	CBlob@ local = getLocalPlayerBlob();
+	if (blob.getPlayer() is null && local is null)
+	{
+		Vec2f charname_pos = getDriver().getScreenPosFromWorldPos(blob.getPosition())+Vec2f(0, Maths::Sin(blob.getTickSinceCreated() * 0.075f) * 5.0f);
+		GUI::DrawTextCentered(blob.getInventoryName(), charname_pos - Vec2f(0, 24), SColor(155,255,255,255));
+	}
+
+	if (blob.hasTag("dead")) return;
 	if (local !is null && getGameTime() > intro_time+30)
 	{
 		u8 local_role_num = local.get_u8("role");
@@ -83,7 +90,6 @@ void onRender(CSprite@ this)
 				f32 len = (local.getAimPos() - blob.getPosition()).Length();
 				if (len < max_len)
 				{
-					GUI::SetFont("menu");
 					f32 team_alpha = 255 * (1.0f - len/max_len);
 					GUI::DrawTextCentered("MURDERER", pos2d, SColor(team_alpha,225,25,25));
 				}
