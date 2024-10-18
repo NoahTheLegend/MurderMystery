@@ -95,14 +95,3 @@ void onTick(CBlob@ blob)
 		}
 	}
 }
-
-void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
-{
-	if (cmd == this.getCommandID("emote"))
-	{
-		string token = params.read_string();
-		u32 emotetime = params.read_u32();
-		this.set_string("emote", token);
-		this.set_u32("emotetime", emotetime);
-	}
-}
