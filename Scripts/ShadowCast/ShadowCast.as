@@ -1,21 +1,21 @@
 #include "ShadowCastHooks.as"
 #include "CustomBlocks.as";
 
-void onInit(CRules@ this)
-{
-    if(isClient())
-	{
-        if (getMap() is null)
-        {
-            this.Tag("require_shadowcast_init");
-            return;
-        }
-		this.set_s32("render_id", -1);
-        Texture::createFromFile("shadow_tex", "pixel.png");
-        //Texture::createFromFile("overlay", "cosmos.png");
-        onReload(this);
-    }
-}
+//void onInit(CRules@ this)
+//{
+//    if(isClient())
+//	{
+//        if (getMap() is null)
+//        {
+//            this.Tag("require_shadowcast_init");
+//            return;
+//        }
+//		this.set_s32("render_id", -1);
+//        Texture::createFromFile("shadow_tex", "pixel.png");
+//        //Texture::createFromFile("overlay", "cosmos.png");
+//        onReload(this);
+//    }
+//}
 
 SMaterial shadow_material;
 const float SHADOW_FAR_PLANE = 10.0f;
@@ -175,22 +175,24 @@ void onSetTile(int offset, uint16 tiletype)
 
 void onTick(CRules@ this)
 {
-    if (this.hasTag("require_shadowcast_init"))
+    if (!this.hasTag("shadowcast_init"))
     {
-        if(isClient())
+        if(getLocalPlayer() !is null && isClient())
 	    {
             if (getMap() is null)
             {
-                this.Tag("require_shadowcast_init");
+                this.Untag("shadowcast_init");
                 return;
             }
 
+            this.Tag("shadowcast_init");
 	    	this.set_s32("render_id", -1);
             Texture::createFromFile("shadow_tex", "pixel.png");
             onReload(this);
-            this.Untag("require_shadowcast_init");
+            return;
         }
     }
+
     if(full_update_needed)
     {
         CMap@ map = getMap();
